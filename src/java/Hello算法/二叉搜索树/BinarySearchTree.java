@@ -1,6 +1,7 @@
 package Hello算法.二叉搜索树;
 
 import common.TreeNode;
+import common.TreeOperation;
 
 public class BinarySearchTree {
     /**
@@ -91,26 +92,24 @@ public class BinarySearchTree {
         }
         //2.如果树中存在目标值对应的节点，此时又分为三种情况，即该节点下有几个节点。0个 / 1个 / 2个
         if (curNode.getLeft() == null && curNode.getRight() == null) { //0个，说明是叶子节点
-            curNode = null; //置空等待GC去回收
-            return; //删除成功
+            preNode.setRight(null);
+            preNode.setLeft(null);
+            //删除成功
         } else if (curNode.getLeft() != null && curNode.getRight() != null) {
             //2个，这个时候如果要删除当前节点，那么应该使用当前节点左子树的值最大节点或者右子树的值的最小节点替换当前节点
             //这里选择右子树的最小节点
             TreeNode tmpNode = curNode.getRight();
-            TreeNode minNodeOfRightTree = null;
+            TreeNode minNodeOfRightTree = null;  //定义右子树的最小节点
             while (tmpNode != null) { //执行中序遍历
                 minNodeOfRightTree = tmpNode;
                 tmpNode = tmpNode.getLeft();
             }
-            //当跳出循环时，当前pre节点即为右字数的最小节点 （中序遍历）
-            //这个时候对目标节点进行删除
-            if (minNodeOfRightTree.getVal() > preNode.getVal()) {
-                preNode.setRight(minNodeOfRightTree);
-            } else {
-                preNode.setLeft(minNodeOfRightTree);
-            }
-            minNodeOfRightTree.setRight(tmpNode);
-            //清空minNodeOfRightTree的父
+            int minNodeOfRightTreeVal= minNodeOfRightTree.getVal(); //防止被修改
+            //当跳出循环时，当前minNodeOfRightTree节点即为右子树的最小节点 （中序遍历）
+            //从右子树中删除minNodeOfRightTree使得其脱离
+            deleteTreeNode(curNode.getRight(), minNodeOfRightTree.getVal());
+            //删除目标节点,其实就是把val植覆盖
+            curNode.setVal(minNodeOfRightTreeVal);
         } else { //1个，如果是1个，那么就使用其子节点替换该节点
             TreeNode childNode = null;
             if (curNode.getLeft() != null) {
@@ -118,20 +117,17 @@ public class BinarySearchTree {
             } else if (curNode.getRight() != null) {
                 childNode = curNode.getRight();
             }
-            if (childNode.getVal() > preNode.getVal()) {
-                preNode.setRight(childNode); //将当前节点的孩子节点挂载到当前节点的上一个节点的右树上
-            } else {
-                preNode.setLeft(childNode);
-            }
+            curNode.setVal(childNode.getVal());
             //删除当前节点
-            curNode.setLeft(null);
-            curNode.setRight(null);
+            curNode.setLeft(childNode.getLeft());
+            curNode.setRight(childNode.getRight());
         }
 
     }
 
 
     public static void main(String[] args) {
+
         TreeNode node_1 = new TreeNode(1);
         TreeNode node_2 = new TreeNode(2);
         TreeNode node_3 = new TreeNode(3);
@@ -150,7 +146,13 @@ public class BinarySearchTree {
         node_2.setLeft(node_1);
         node_2.setRight(node_3);
         node_5.setRight(node_6);
-        System.out.println("binarySearch(node_1,7) = " + binarySearch(node_4, 6));
+        System.out.println("______________插入节点前的树形态_________________");
+        TreeOperation.show(node_4);
         insertTreeNode(node_4, 8);
+        System.out.println("______________插入节点以后的树形态_________________");
+        TreeOperation.show(node_4);
+        deleteTreeNode(node_4,2);
+        System.out.println("______________删除节点以后的树形态_________________");
+        TreeOperation.show(node_4);
     }
 }
