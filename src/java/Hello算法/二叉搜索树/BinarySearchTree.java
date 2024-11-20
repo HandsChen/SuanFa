@@ -52,6 +52,7 @@ public class BinarySearchTree {
                 curNode = curNode.getLeft();
             }
         }
+
         //3.将目标数插入到前置节点
         if (target > preNode.getVal()) {
             preNode.setRight(new TreeNode(target));
