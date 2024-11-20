@@ -126,6 +126,7 @@ public class BinarySearchTree {
             curNode.setLeft(null);
             curNode.setRight(null);
         }
+
     }
 
 
