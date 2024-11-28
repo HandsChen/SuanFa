@@ -51,4 +51,20 @@ public class AVLTree {
             return node; //已经平衡直接返回
         }
     }
+
+//    //插入节点
+//    void insert(int val) {
+//        root = insertHelper(root, val);
+//    }
+
+    /*
+    递归插入节点（辅助方法）
+    * */
+    TreeNode insertHelper(TreeNode node, int val) {
+        if (node == null) { //如果根节点不存在，那么初始化一个节点
+            return new TreeNode(val);
+        }
+        //查找插入的位置并插入节点
+        return null;
+    }
 }
